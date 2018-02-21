@@ -14,5 +14,15 @@ create database and grant privilages as mentioned in the docker-compose.yml file
 Step 4:
 docker-compose up -d
 
+Note: Give it few mins ;)
+
 Step 5:
 Login and start using awx.
+http://localhost:8052
+
+admin / password
+
+Additional Notes:
+1. Use SVN or Git to store your ansible config files
+2. Make backups of ansible database as needed.
+3. Create new admin users and rename defaults.
