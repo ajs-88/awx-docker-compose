@@ -1,0 +1,57 @@
+version: '3'
+services:
+
+  rabbitmq:
+    image: "rabbitmq:3"
+    environment:
+      RABBITMQ_DEFAULT_VHOST: awx
+
+  memcached:
+    image: "memcached:alpine"
+
+  awx_web:
+    image: "ansible/awx_web:latest"
+    links:
+      - rabbitmq
+      - memcached
+    ports:
+      - "80:8052"
+    hostname: awxweb
+    user: root
+    environment:
+      SECRET_KEY: aabbcc
+      DATABASE_USER: awx
+      DATABASE_PASSWORD: awxpass
+      DATABASE_NAME: awx
+      DATABASE_PORT: 5432
+      DATABASE_HOST: [Postgres database server IP]
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_VHOST: awx
+      MEMCACHED_HOST: memcached
+      MEMCACHED_PORT: 11211
+
+  awx_task:
+    image: "ansible/awx_task:latest"
+    links:
+      - rabbitmq
+      - memcached
+      - awx_web:awxweb
+    hostname: awx
+    user: root
+    environment:
+      SECRET_KEY: aabbcc
+      DATABASE_USER: awx
+      DATABASE_PASSWORD: awxpass
+      DATABASE_NAME: awx
+      DATABASE_PORT: 5432
+      DATABASE_HOST: [Postgres database server IP]
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_VHOST: awx
+      MEMCACHED_HOST: memcached
+      MEMCACHED_PORT: 11211
